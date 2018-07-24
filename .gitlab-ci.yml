@@ -4,18 +4,28 @@ variables:
   ANDROID_COMPILE_SDK: "28"
   ANDROID_BUILD_TOOLS: "28.0.1"
 
+cache:
+  paths:
+    - build-tools/
+    - extras/
+    - licenses/
+    - patcher/
+    - platform-tools/
+    - platforms/
+    - tools/
+
 before_script:
-  - wget https://dl.google.com/android/repository/sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip
-  - unzip sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip
-  - echo y | tools/bin/sdkmanager --install build-tools\;${ANDROID_BUILD_TOOLS}
-  - echo y | tools/bin/sdkmanager --install platform-tools
-  - echo y | tools/bin/sdkmanager --install platforms\;android-${ANDROID_COMPILE_SDK}
-  - echo y | tools/bin/sdkmanager --install extras\;android\;m2repository
-  - echo y | tools/bin/sdkmanager --install extras\;google\;google_play_services
-  - echo y | tools/bin/sdkmanager --install extras\;google\;m2repository
-  - export ANDROID_HOME=$PWD
-  - export PATH=$PATH:$PWD/platform-tools/
-  - chmod +x ./gradlew
+  - wget https://dl.google.com/android/repository/sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip | tee -a build.log
+  - unzip sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip | tee -a build.log
+  - echo y | tools/bin/sdkmanager --install build-tools\;${ANDROID_BUILD_TOOLS} >> build.log
+  - echo y | tools/bin/sdkmanager --install platform-tools >> build.log
+  - echo y | tools/bin/sdkmanager --install platforms\;android-${ANDROID_COMPILE_SDK} >> build.log
+  - echo y | tools/bin/sdkmanager --install extras\;android\;m2repository >> build.log
+  - echo y | tools/bin/sdkmanager --install extras\;google\;google_play_services >> build.log
+  - echo y | tools/bin/sdkmanager --install extras\;google\;m2repository >> build.log
+  - export ANDROID_HOME=$PWD  >> build.log
+  - export PATH=$PATH:$PWD/platform-tools/  >> build.log
+  - chmod +x ./gradlew -v >> build.log
 
 stages:
   - build
@@ -23,10 +33,12 @@ stages:
 build_app:
   stage: build
   script:
-    - ./gradlew assembleDebug
+    - ./gradlew assembleDebug | tee -a build.log
   artifacts:
     when: always
+    name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
     expire_in: 2 weeks
     paths:
       - app/build/outputs/apk/debug/app-debug.apk
       - app/build/outputs/apk/debug/output.json
+      - build.log
