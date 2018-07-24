@@ -1,7 +1,20 @@
 variables:
   JAVA_HOME: "/usr/lib/jvm/java-8-oracle"
+  ANDROID_SDK_TOOLS: "4333796"
+  ANDROID_COMPILE_SDK: "28"
+  ANDROID_BUILD_TOOLS: "28.0.1"
 
 before_script:
+  - wget https://dl.google.com/android/repository/sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip
+  - unzip sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip
+  - echo y | tools/bin/sdkmanager --install build-tools\;${ANDROID_BUILD_TOOLS}
+  - echo y | tools/bin/sdkmanager --install platform-tools
+  - echo y | tools/bin/sdkmanager --install platforms\;android-${ANDROID_COMPILE_SDK}
+  - echo y | tools/bin/sdkmanager --install extras\;android\;m2repository
+  - echo y | tools/bin/sdkmanager --install extras\;google\;google_play_services
+  - echo y | tools/bin/sdkmanager --install extras\;google\;m2repository
+  - export ANDROID_HOME=$PWD
+  - export PATH=$PATH:$PWD/platform-tools/
   - chmod +x ./gradlew
 
 stages:
