@@ -16,7 +16,7 @@ cache:
 
 before_script:
   - wget https://dl.google.com/android/repository/sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip | tee -a build.log
-  - unzip sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip | tee -a build.log
+  - unzip -f -o sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip | tee -a build.log
   - echo y | tools/bin/sdkmanager --install build-tools\;${ANDROID_BUILD_TOOLS} >> build.log
   - echo y | tools/bin/sdkmanager --install platform-tools >> build.log
   - echo y | tools/bin/sdkmanager --install platforms\;android-${ANDROID_COMPILE_SDK} >> build.log
