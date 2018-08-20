@@ -15,16 +15,16 @@ cache:
     - tools/
 
 before_script:
-  - wget https://dl.google.com/android/repository/sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip | tee -a build.log
-  - unzip -f -o sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip | tee -a build.log
+  - wget --no-verbose https://dl.google.com/android/repository/sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip >> build.log
+  - unzip -f -o sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip >> build.log
   - echo y | tools/bin/sdkmanager --install build-tools\;${ANDROID_BUILD_TOOLS} >> build.log
   - echo y | tools/bin/sdkmanager --install platform-tools >> build.log
   - echo y | tools/bin/sdkmanager --install platforms\;android-${ANDROID_COMPILE_SDK} >> build.log
   - echo y | tools/bin/sdkmanager --install extras\;android\;m2repository >> build.log
   - echo y | tools/bin/sdkmanager --install extras\;google\;google_play_services >> build.log
   - echo y | tools/bin/sdkmanager --install extras\;google\;m2repository >> build.log
-  - export ANDROID_HOME=$PWD  >> build.log
-  - export PATH=$PATH:$PWD/platform-tools/  >> build.log
+  - export ANDROID_HOME=$PWD >> build.log
+  - export PATH=$PATH:$PWD/platform-tools/ >> build.log
   - chmod +x ./gradlew -v >> build.log
 
 stages:
